@@ -1,22 +1,44 @@
-
+#include "math.h"
+#include <stdio.h>
 #include "jpg.h"
 #include "mnist.h"
 
 
 
-int main(int argc, char** argv)
-{
-    if(argc < 3) {fprintf(stderr, "Please provide two mnist file\n"); exit(1); }
-    string path = argv[1];
-    string path_labels = argv[2];
+float dist(float* v1,float* v2) {
+      float d=0;
+      for(int i=0;i<784;i++){
+      d += (v1[i]-v2[i]* v1[i]-v2[i]);
 
-    float** data = read_mnist(path);
-    float* labels = read_labels(path_labels);
+}
+return 0;
+
+}
+
+int main(int argc, char** argv){
+    
+
+    float** images = read_mnist("train-images.idx3-ubyte");
+    float* labels = read_labels("train-labels.idx1-ubyte");
+    float** test_images = read_mnist("10k-images.idx3-ubyte");
+
 
     for(int i=0; i<60000; i++) {
-        printf("%u\n", i);
-        save_jpg(data[i], 28, 28, "%u/%u.jpg",(int)labels[i], i);
-    
+    printf("%u/n",i);  
+    float mind=1;
+    int MN;
+    for(int j=0; j<60000; j++) {
+        float d=dist(test_images[i],images[j]);
+        if(d<=mind  || mind==-1) {
+         mind=d;
+         MN=j;
+      }
+
+}
+
+    int inf = labels[MN];
+    save_jpg(test_images[i],28,28,"%u/%u.jpg",inf,i);
+             
 }
 
     return 0;
